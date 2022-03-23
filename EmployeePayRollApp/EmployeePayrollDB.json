@@ -2,16 +2,16 @@
   "EmployeePayrollDB": [
     {
       "id": 1,
-      "_name": "Mark",
-      "_gender": "male",
+      "_name": "Marks",
       "_department": [
-        "Engineering",
         "Finance"
       ],
-      "_salary": "500000",
+      "_salary": "401900",
       "_startDate": "29 Oct 2019",
       "_note": "All In One",
-      "_profilePic": "../assets/profile-images/Ellipse -3.png"
+      "_profilePic": "../assets/profile-images/Ellipse -3.png",
+      "_notes": "hello",
+      "_gender": "Male"
     },
     {
       "id": 2,
@@ -36,6 +36,19 @@
       "_note": "",
       "_profilePic": "../assets/profile-images/Ellipse -1.png",
       "id": 3
+    },
+    {
+      "id": "70",
+      "_name": "Mahaboob",
+      "_salary": "400000",
+      "_notes": "helllo",
+      "_profilePic": "../assets/profile-images/Ellipse -3.png",
+      "_gender": "Male",
+      "_department": [
+        "Sales",
+        "Engineer"
+      ],
+      "_startDate": "1 Jan 2022"
     }
   ]
 }

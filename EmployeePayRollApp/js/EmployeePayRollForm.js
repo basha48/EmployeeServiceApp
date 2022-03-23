@@ -1,16 +1,10 @@
 let isUpdate = false;
 let employeePayRollObj = {};
-let site_properties = {
-  use_local_storage :"true",
-  homepage : "../pages/EmployeePayrollHomePage.html",
-  add_emp_payroll_page : "../pages/AddEmployeeForm.html",
-  server_url: "http://127:0.0.1:3000/EmployeePayrollDB/"
-};
 window.addEventListener('DOMContentLoaded', (event) => {
   salaryOutput();
   validateName();
   validateDate();
-  document.querySelector("#cancelButton").href = site_properties.homepage;
+  document.querySelector("#cancelButton").href = site_propertie.homepage;
   checkForUpdate();
 
 
@@ -89,7 +83,7 @@ function save(event) {
   event.stopPropagation();
   try {
     setemployeePayRollObj();
-    if(site_properties.use_local_storage.match("true")){
+    if(site_propertie.use_local_storage.match("true")){
 
   
        createAndUpdateStorage();
@@ -107,21 +101,21 @@ function save(event) {
 }
 
 const createOrUpdateEmployeePayroll =() =>{
-  let postUrl =site_properties.server_url;
+  let postUrl =site_propertie.server_url;
   let methodCall = "POST";
   if(isUpdate){
     methodCall = "PUT";
     postUrl = postUrl + employeePayRollObj.id.toString();
+  }
     makeServiceCall(methodCall, postUrl, true,employeePayRollObj)
         .then(responseText => {
          resetButton();
-         window.location.replace(site_properties.homepage);
+         window.location.replace(site_propertie.homepage);
         })
         .catch(error => {
         throw error;
         });
   }
-}
 
 function setemployeePayRollObj ()
 {
@@ -217,42 +211,6 @@ function createAndUpdateStorage() {
   //alert(JSON.stringify(employeePayrollList));
 }
 
-
-function createEmployeePayrollData(id){
-  let employeePayrollData = new EmployeePayrollData();
-  if(!id) employeePayrollData.id =  createEmployeeId();
-  else
-  employeePayrollData.id = id;
-  setemployeePayrollData(employeePayrollData);
-  return employeePayrollData;
-}
-
-
-function setemployeePayrollData(employeePayrollData){
-
-  try{
-    employeePayrollData.name = employeePayRollObj._name;
-
-  }
-  catch(e){
-    setTextValue('.text-error',e);
-    throw e;
-  }
-  employeePayrollData.salary =  employeePayRollObj._salary; 
-  employeePayrollData.notes = employeePayRollObj._notes;
-  employeePayrollData.profilePic = employeePayRollObj._profilePic;
-  employeePayrollData.gender = employeePayRollObj._gender ;
-  employeePayrollData.department = employeePayRollObj._department;
-  try{
-    employeePayrollData.startDate = new Date(Date.parse(employeePayRollObj._startDate));
-  }
-catch(e){
-  setTextValue('.text-error',e);
-    throw e;
-
-}
-alert(employeePayrollData.toString());
-}
 function resetButton() {
   setValue('#name', '');
   unsetSelectedValues('[name=profile]');
@@ -308,4 +266,39 @@ const setForm = () =>{
   setValue('#day', date[0]);
   setValue('#month', date[1]);
   setValue('#year', date[2]);
+}
+
+
+
+function makeServiceCall(methodType, url, async = true, data = null) {
+  return new Promise(function (resolve, reject) {
+  let xhr = new XMLHttpRequest();
+  xhr.onload = function () {
+    console.log(methodType+ "state changed called Ready State" +xhr.readyState+"status" +xhr.status);
+    if (xhr.status.toString().match('^[2][0-9]{2}$')) {
+        resolve(xhr.responseText);
+      } else if (xhr.status.toString().match('^[4,5][0-9]{2}$')) {
+        reject({
+          status: xhr.status,
+          statusText: xhr.statusText,
+        });
+        console.log("XR Failed!");
+        console.log("Handle 400 Client Error or 500 Server Error.");
+      }
+    }
+  xhr.onerror = function(){
+      reject({
+          status: xhr.status,
+          statusText: xttp.statusText
+        });
+  };
+  xhr.open(methodType, url, async);
+  if (data) {
+    console.log(JSON.stringify(data));
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(data));
+  } else 
+  xhr.send();
+  console.log(methodType + " request sent to the server.");
+});
 }
